@@ -1,0 +1,37 @@
+import { TextInput, StyleSheet } from "react-native";
+import { defaultFontSize, primaryColor } from "@/src/styles";
+import { View, Text } from "react-native";
+
+interface CustomTextInputProps {
+  placeholder?: string;
+  label?: string;
+}
+
+export default function CustomTextInput(props: CustomTextInputProps) {
+  const { label, placeholder } = props;
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.label}>{label}</Text>
+      <TextInput style={styles.input} placeholder={placeholder}></TextInput>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  label: {
+    fontSize: defaultFontSize,
+    marginRight: 12,
+  },
+  input: {
+    fontSize: defaultFontSize,
+    borderBottomWidth: 2,
+    flexGrow: 1,
+    borderBottomColor: primaryColor,
+  },
+});
