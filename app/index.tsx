@@ -3,19 +3,21 @@ import { useState } from "react";
 import { Text, View, FlatList, StyleSheet } from "react-native";
 
 const mockAction = {
-    name: "Relay 111",
-    status: false
-}
+  name: "Relay 111",
+  status: false,
+};
 
-const mockDevices: DeviceData[] =
-[
-  {name: "POLIVALKA 3000", status: {"Power": "100%"}, actions: [mockAction]}, 
-  {name: "POLIVALKA 3001", status: {"Power": "33%"}, actions: [mockAction, mockAction]}]
-
+const mockDevices: DeviceData[] = [
+  { name: "POLIVALKA 3000", status: { Power: "100%" }, actions: [mockAction] },
+  {
+    name: "POLIVALKA 3001",
+    status: { Power: "33%" },
+    actions: [mockAction, mockAction],
+  },
+];
 
 export default function Index() {
-
-  const [devices, setDevices] = useState<DeviceData[]>([])
+  const [devices, setDevices] = useState<DeviceData[]>([]);
 
   return (
     <View
@@ -25,29 +27,34 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Header /> 
+      <Header />
       <DeviceList data={mockDevices} />
     </View>
   );
 }
 
-function DeviceList(props: {data: DeviceData[]}) {
-  return <FlatList style={styles.deviceList} data={props.data} renderItem={item => <Device data={item.item} />} />
-
+function DeviceList(props: { data: DeviceData[] }) {
+  return (
+    <FlatList
+      style={styles.deviceList}
+      data={props.data}
+      renderItem={(item) => <Device data={item.item} />}
+    />
+  );
 }
-
 
 function Header() {
-  return <View style={styles.header}>
-    <Text style={styles.headerText}>KustIoT</Text>
-  </View>
+  return (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>KustIoT</Text>
+    </View>
+  );
 }
-
 
 const styles = StyleSheet.create({
   header: {
     backgroundColor: "#6062c7",
-    width: "100%"
+    width: "100%",
   },
   headerText: {
     color: "white",
@@ -59,6 +66,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     flexDirection: "column",
     backgroundColor: "#D7D7D7",
-    width: "100%"
-  }
-})
+    width: "100%",
+  },
+});
