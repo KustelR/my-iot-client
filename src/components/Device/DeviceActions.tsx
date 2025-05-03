@@ -1,25 +1,28 @@
 import { View, Text, FlatList } from "react-native";
-import { DeviceActionData } from ".";
+import { DeviceActionData, DeviceData } from ".";
 import styles from "./styles";
 import InlineButton from "@/src/components/InlineButton";
 import { useState } from "react";
 import { Portal } from "@/src/components/Portal";
+import CustomTextInput from "../CustomTextInput";
 
-export default function DeviceActions(props: { data: DeviceActionData[] }) {
+export default function DeviceActions(props: { data: DeviceData }) {
   return (
     <View>
       <Text style={styles.deviceDataHeader}>Actions</Text>
       <FlatList
-        data={props.data}
-        renderItem={(item) => <DeviceAction data={item.item} />}
+        data={props.data.actions}
+        renderItem={(item) => (
+          <DeviceAction deviceName={props.data.name} data={item.item} />
+        )}
       />
     </View>
   );
 }
 
-function DeviceAction(props: { data: DeviceActionData }) {
+function DeviceAction(props: { deviceName: string; data: DeviceActionData }) {
   const [isPerforming, setIsPerforming] = useState(false);
-  const { data } = props;
+  const { deviceName, data } = props;
   return (
     <>
       <View style={styles.deviceListItem}>
@@ -35,6 +38,8 @@ function DeviceAction(props: { data: DeviceActionData }) {
         />
       </View>
       <ActionPerformingMenu
+        deviceName={deviceName}
+        action={data}
         isPerforming={isPerforming}
         setIsPerforming={setIsPerforming}
       />
@@ -43,13 +48,24 @@ function DeviceAction(props: { data: DeviceActionData }) {
 }
 
 function ActionPerformingMenu(props: {
+  deviceName: string;
+  action: DeviceActionData;
   isPerforming: boolean;
   setIsPerforming: (arg: boolean) => void;
 }) {
-  const { isPerforming, setIsPerforming } = props;
+  const { deviceName, isPerforming, setIsPerforming, action } = props;
+
   return (
     <Portal isVisible={isPerforming} setIsVisible={setIsPerforming}>
-      <Text>sadfasdf</Text>
+      <Text style={[styles.deviceDataHeader, { fontWeight: "bold" }]}>
+        {deviceName} - {action.name}
+      </Text>
+      <FlatList
+        style={{ marginBottom: 80 }}
+        data={action.properties}
+        renderItem={(item) => <CustomTextInput label={item.item} />}
+      />
+      <InlineButton active title="Perform" />
     </Portal>
   );
 }

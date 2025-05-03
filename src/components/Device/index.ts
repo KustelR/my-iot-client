@@ -14,6 +14,7 @@ export interface DeviceStatusData {
 export interface DeviceActionData {
   name: string;
   status: boolean;
+  properties: string[];
 }
 
 export type DeviceProps = {

@@ -10,7 +10,7 @@ export default function Device(props: DeviceProps) {
     <View style={styles.device}>
       <Text style={styles.deviceHeader}>{props.data.name}</Text>
       <DeviceStatus data={data.status} />
-      <DeviceActions data={data.actions} />
+      <DeviceActions data={data} />
     </View>
   );
 }
