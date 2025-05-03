@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   device: {
+    flex: 1,
     backgroundColor: "white",
     padding: 12,
     marginBottom: 12,
