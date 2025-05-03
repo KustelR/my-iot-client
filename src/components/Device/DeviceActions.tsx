@@ -1,5 +1,6 @@
 import { View, Text, FlatList } from "react-native";
-import { DeviceActionData, styles } from ".";
+import { DeviceActionData } from ".";
+import styles from "./styles";
 import InlineButton from "@/src/components/InlineButton";
 import { useState } from "react";
 import { Portal } from "@/src/components/Portal";

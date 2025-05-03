@@ -1,5 +1,6 @@
 import { View, Text, FlatList } from "react-native";
-import { DeviceStatusData, styles } from ".";
+import { DeviceStatusData } from ".";
+import styles from "./styles";
 
 export default function DeviceStatus(props: { data: DeviceStatusData }) {
   return (
