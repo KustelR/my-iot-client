@@ -105,7 +105,7 @@ function Header() {
         <Image
           placeholder="icon"
           style={{ width: "90%", height: "100%", marginRight: 8 }}
-          source={require("@/src/assets/icon.svg")}
+          source={require("@/assets/images/icon.svg")}
         />
       </View>
       <Text style={styles.headerText}>KustIoT</Text>
