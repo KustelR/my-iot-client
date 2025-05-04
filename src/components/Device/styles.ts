@@ -5,7 +5,7 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     padding: 12,
-    marginBottom: 12,
+    marginTop: 12,
     borderRadius: 12,
   },
   deviceHeader: {

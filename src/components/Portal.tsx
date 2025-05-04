@@ -12,7 +12,7 @@ export function Portal(props: {
   return (
     <>
       {isVisible && (
-        <Modal onRequestClose={() => setIsVisible(false)} animationType="slide">
+        <Modal onRequestClose={() => setIsVisible(false)} animationType="fade">
           <View style={styles.portal}>
             <View style={styles.container}>
               <View style={styles.items}>{children}</View>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     height: "100%",
     justifyContent: "space-between",
-    backgroundColor: "#d7d7d7",
+    backgroundColor: "rgba(0, 0, 0, 0.25)",
   },
   items: {
     width: "100%",
