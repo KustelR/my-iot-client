@@ -7,13 +7,15 @@ import { Portal } from "@/src/components/Portal";
 import CustomTextInput from "../CustomTextInput";
 
 export default function DeviceActions(props: { data: DeviceData }) {
+  const { data } = props;
   return (
     <View>
       <Text style={styles.deviceDataHeader}>Actions</Text>
+      {data.actions.length === 0 && <Text>Device provided no actions</Text>}
       <FlatList
-        data={props.data.actions}
+        data={data.actions}
         renderItem={(item) => (
-          <DeviceAction deviceName={props.data.name} data={item.item} />
+          <DeviceAction deviceName={data.name} data={item.item} />
         )}
       />
     </View>
