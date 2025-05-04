@@ -37,7 +37,6 @@ const RotatingView: React.FC<AnimatedProps> = (props) => {
     setAnimation(a);
     a.start();
     rotateAnim.addListener((animVal) => {
-      console.log(animVal.value);
       setVal(animVal.value);
     });
   }, [rotateAnim, isAnimated]);

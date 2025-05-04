@@ -28,12 +28,12 @@ export default function Device(props: DeviceProps) {
             setTimeout(() => {
               setSyncState("fail");
               setIsSyncLocked(false);
-            }, 1000);
+            }, 3000);
           } else {
             setTimeout(() => {
               setSyncState("success");
               setIsSyncLocked(false);
-            }, 1000);
+            }, 300);
           }
         }}
       />

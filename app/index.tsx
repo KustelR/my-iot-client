@@ -1,5 +1,5 @@
 import Device, { DeviceData } from "@/src/components/Device";
-import DeviceEditor from "@/src/components/DeviceEditor";
+import DeviceEditor from "@/src/components/Device/DeviceEditor";
 import { defaultFontSize } from "@/src/styles";
 import { useEffect, useState } from "react";
 import {
