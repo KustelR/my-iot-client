@@ -92,6 +92,13 @@ function AddDeviceButton(props: { setIsAdding?: (arg: boolean) => void }) {
           if (setIsAdding) setIsAdding(true);
         }}
       >
+        <View style={{ height: 60, width: 60 }}>
+          <Image
+            placeholder="icon"
+            style={{ width: "100%", height: "100%", marginRight: 8 }}
+            source={require("@/assets/images/plus.svg")}
+          />
+        </View>
         <Text style={styles.addDeviceText}>Add device</Text>
       </View>
     </TouchableHighlight>
@@ -136,6 +143,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   addDevice: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
     backgroundColor: "white",
     padding: 12,
