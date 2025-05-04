@@ -5,15 +5,26 @@ import { View, Text } from "react-native";
 interface CustomTextInputProps {
   placeholder?: string;
   label?: string;
+  onChangeText?: (arg: string) => void;
 }
 
 export default function CustomTextInput(props: CustomTextInputProps) {
-  const { label, placeholder } = props;
+  const { label, placeholder, onChangeText: onChangeProp } = props;
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput style={styles.input} placeholder={placeholder}></TextInput>
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        onChangeText={
+          onChangeProp
+            ? (e) => {
+                onChangeProp(e);
+              }
+            : () => {}
+        }
+      ></TextInput>
     </View>
   );
 }
