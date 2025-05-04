@@ -1,10 +1,7 @@
-import CustomTextInput from "@/src/components/CustomTextInput";
 import Device, { DeviceData } from "@/src/components/Device";
-import InlineButton from "@/src/components/InlineButton";
-import Picker from "@/src/components/Picker";
-import { Portal } from "@/src/components/Portal";
+import DeviceEditor from "@/src/components/DeviceEditor";
 import { defaultFontSize } from "@/src/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -12,20 +9,13 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from "react-native";
+import { Image } from "expo-image";
 
 const mockAction = {
   name: "Relay 111",
   status: false,
   properties: ["duration"],
 };
-
-type DeviceType = "gsm";
-
-function isDeviceType(data: string): data is DeviceType {
-  const deviceTypes = ["gsm"];
-  if (deviceTypes.includes(data)) return true;
-  return false;
-}
 
 const mockDevices: DeviceData[] = [
   { name: "POLIVALKA 3000", status: { Power: "100%" }, actions: [mockAction] },
@@ -39,6 +29,10 @@ const mockDevices: DeviceData[] = [
 export default function Index() {
   const [devices, setDevices] = useState<DeviceData[]>([]);
 
+  useEffect(() => {
+    setDevices(mockDevices);
+  }, []);
+
   return (
     <View
       style={{
@@ -48,24 +42,29 @@ export default function Index() {
       }}
     >
       <Header />
-      <DeviceList data={mockDevices} />
+      <DeviceList devices={devices} setDevices={setDevices} />
     </View>
   );
 }
 
-function DeviceList(props: { data: DeviceData[] }) {
-  const { data } = props;
+function DeviceList(props: {
+  devices: DeviceData[];
+  setDevices: (d: DeviceData[]) => void;
+}) {
+  const { devices, setDevices } = props;
   const [isAdding, setIsAdding] = useState(false);
   return (
     <>
       <View style={styles.deviceList}>
         <FlatList
-          data={[...props.data, null]}
+          data={[...props.devices, null]}
           renderItem={(item) => {
             return (
               <View style={{ flex: 1 }}>
-                {item.index < data.length && <Device data={data[item.index]} />}
-                {item.index == data.length && (
+                {item.index < devices.length && (
+                  <Device data={devices[item.index]} />
+                )}
+                {item.index == devices.length && (
                   <AddDeviceButton setIsAdding={setIsAdding} />
                 )}
               </View>
@@ -73,33 +72,13 @@ function DeviceList(props: { data: DeviceData[] }) {
           }}
         />
       </View>
-      <Portal isVisible={isAdding} setIsVisible={setIsAdding}>
-        <DeviceEditor />
-      </Portal>
+      <DeviceEditor
+        isVisible={isAdding}
+        setIsVisible={setIsAdding}
+        devices={devices}
+        setDevices={setDevices}
+      />
     </>
-  );
-}
-
-function DeviceEditor() {
-  const [deviceType, setDeviceType] = useState<DeviceType | null>(null);
-  return (
-    <View>
-      <View style={{ marginBottom: 120 }}>
-        <Text style={styles.deviceEditorHeader}>Device Editor</Text>
-        <CustomTextInput label="Name" />
-        <View style={{ marginBottom: 12 }}>
-          <Picker
-            label="Mode"
-            items={[{ name: "GSM", value: "gsm" }]}
-            onChange={(val) => {
-              if (isDeviceType(val)) setDeviceType(val);
-            }}
-          />
-        </View>
-        {deviceType == "gsm" && <GSMDeviceEditor />}
-      </View>
-      <InlineButton active title="Add" />
-    </View>
   );
 }
 
@@ -119,17 +98,16 @@ function AddDeviceButton(props: { setIsAdding?: (arg: boolean) => void }) {
   );
 }
 
-function GSMDeviceEditor() {
-  return (
-    <View>
-      <CustomTextInput label="Phone Number" />
-    </View>
-  );
-}
-
 function Header() {
   return (
     <View style={styles.header}>
+      <View style={{ height: 60, width: 60 }}>
+        <Image
+          placeholder="icon"
+          style={{ width: "90%", height: "100%", marginRight: 8 }}
+          source={require("@/src/assets/icon.svg")}
+        />
+      </View>
       <Text style={styles.headerText}>KustIoT</Text>
     </View>
   );
@@ -139,6 +117,10 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#6062c7",
     width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
   },
   headerText: {
     color: "white",
@@ -149,7 +131,6 @@ const styles = StyleSheet.create({
     display: "flex",
     paddingLeft: 12,
     paddingRight: 12,
-    paddingTop: 8,
     flexDirection: "column",
     backgroundColor: "#D7D7D7",
     width: "100%",
@@ -158,13 +139,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     padding: 12,
+    marginTop: 12,
+    marginBottom: 12,
     borderRadius: 12,
   },
   addDeviceText: {
     fontSize: defaultFontSize,
-  },
-  deviceEditorHeader: {
-    fontSize: 32,
-    fontWeight: "bold",
   },
 });
