@@ -9,6 +9,11 @@ export default StyleSheet.create({
     borderRadius: 12,
   },
   deviceHeader: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  deviceHeaderText: {
     fontWeight: "bold",
     fontSize: 32,
   },
