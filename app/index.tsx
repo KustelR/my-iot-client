@@ -1,4 +1,4 @@
-import Device, { DeviceData } from "@/src/components/Device";
+import Device, { DeviceActionData, DeviceData } from "@/src/components/Device";
 import DeviceEditor from "@/src/components/Device/DeviceEditor";
 import { defaultFontSize } from "@/src/styles";
 import { useEffect, useState } from "react";
@@ -10,10 +10,16 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { Image } from "expo-image";
+import { useDevices } from "@/src/hooks/useDevices";
 
-const mockAction = {
+const mockAction: DeviceActionData = {
   name: "Relay 111",
-  status: false,
+  properties: ["duration"],
+};
+const mockAction2: DeviceActionData = {
+  name: "Relay 121",
+  startedAt: Date.now(),
+  duration: 100002,
   properties: ["duration"],
 };
 
@@ -22,16 +28,21 @@ const mockDevices: DeviceData[] = [
   {
     name: "POLIVALKA 3001",
     status: { Power: "33%" },
-    actions: [mockAction, mockAction],
+    actions: [mockAction, mockAction2, mockAction],
   },
 ];
 
 export default function Index() {
   const [devices, setDevices] = useState<DeviceData[]>([]);
 
+  const devicesProvider = useDevices();
+
   useEffect(() => {
-    setDevices(mockDevices);
-  }, []);
+    if (!devicesProvider) return;
+    devicesProvider.addSubscriber((d) => {
+      setDevices(d);
+    });
+  }, [devicesProvider]);
 
   return (
     <View
@@ -42,7 +53,12 @@ export default function Index() {
       }}
     >
       <Header />
-      <DeviceList devices={devices} setDevices={setDevices} />
+      <DeviceList
+        devices={devices}
+        setDevices={(d) => {
+          devicesProvider ? devicesProvider.set(d) : {};
+        }}
+      />
     </View>
   );
 }
