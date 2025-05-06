@@ -136,8 +136,6 @@ const styles = StyleSheet.create({
   deviceList: {
     flex: 1,
     display: "flex",
-    paddingLeft: 12,
-    paddingRight: 12,
     flexDirection: "column",
     backgroundColor: "#D7D7D7",
     width: "100%",
@@ -150,8 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
     padding: 12,
-    marginTop: 12,
-    marginBottom: 12,
+    margin: defaultFontSize / 2,
     borderRadius: 12,
   },
   addDeviceText: {

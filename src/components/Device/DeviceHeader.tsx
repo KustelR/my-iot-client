@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   deviceHeader: {
+    flexWrap: "wrap",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
