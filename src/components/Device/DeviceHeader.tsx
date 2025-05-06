@@ -7,7 +7,6 @@ import {
   Animated,
   ViewStyle,
 } from "react-native";
-import styles from "./styles";
 import { Image } from "expo-image";
 import { PropsWithChildren, useEffect, useState } from "react";
 import RotatingView from "@/src/components/RotatingView";
@@ -65,10 +64,10 @@ function DeviceControls(props: DeviceControlsProps) {
     }
   }, [syncStatus]);
   return (
-    <View style={localStyles.controls}>
+    <View style={styles.controls}>
       <TouchableHighlight>
         <RotatingView
-          style={localStyles.controlIcon}
+          style={styles.controlIcon}
           isAnimated={isSyncAnimated}
           onTouchStart={onSyncTouch}
         >
@@ -76,7 +75,7 @@ function DeviceControls(props: DeviceControlsProps) {
         </RotatingView>
       </TouchableHighlight>
       <TouchableHighlight>
-        <View style={localStyles.controlIcon} onTouchStart={onEditTouch}>
+        <View style={styles.controlIcon} onTouchStart={onEditTouch}>
           <Image
             style={{ width: "100%", height: "100%" }}
             source={require("@/assets/images/edit.svg")}
@@ -87,7 +86,7 @@ function DeviceControls(props: DeviceControlsProps) {
   );
 }
 
-const localStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   controlIcon: {
     width: 40,
     height: 40,
@@ -100,5 +99,14 @@ const localStyles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignContent: "center",
+  },
+  deviceHeader: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  deviceHeaderText: {
+    fontWeight: "bold",
+    fontSize: 32,
   },
 });

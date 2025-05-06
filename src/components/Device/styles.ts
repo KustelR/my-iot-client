@@ -8,15 +8,6 @@ export default StyleSheet.create({
     marginTop: 12,
     borderRadius: 12,
   },
-  deviceHeader: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  deviceHeaderText: {
-    fontWeight: "bold",
-    fontSize: 32,
-  },
   deviceListItem: {
     paddingTop: 6,
     marginBottom: 6,
