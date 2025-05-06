@@ -1,4 +1,4 @@
-import Device, { DeviceActionData, DeviceData } from "@/src/components/Device";
+import Device, { DeviceData } from "@/src/components/Device";
 import DeviceEditor from "@/src/components/Device/DeviceEditor";
 import { defaultFontSize } from "@/src/styles";
 import { useEffect, useState } from "react";
@@ -11,6 +11,10 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useDevices } from "@/src/hooks/useDevices";
+import { useTranslation } from "react-i18next";
+import Picker from "@/src/components/Picker";
+import { Portal } from "@/src/components/Portal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const [devices, setDevices] = useState<DeviceData[]>([]);
@@ -80,6 +84,7 @@ function DeviceList(props: {
 
 function AddDeviceButton(props: { setIsAdding?: (arg: boolean) => void }) {
   const { setIsAdding } = props;
+  const { t } = useTranslation();
   return (
     <TouchableHighlight>
       <View
@@ -95,24 +100,58 @@ function AddDeviceButton(props: { setIsAdding?: (arg: boolean) => void }) {
             source={require("@/assets/images/plus.svg")}
           />
         </View>
-        <Text style={styles.addDeviceText}>Add device</Text>
+        <Text style={styles.addDeviceText}>{t("add-device")}</Text>
       </View>
     </TouchableHighlight>
   );
 }
 
 function Header() {
+  const { t } = useTranslation();
+
+  const [isOpenSettings, setIsOpenSettings] = useState(false);
+
   return (
-    <View style={styles.header}>
-      <View style={{ height: 60, width: 60 }}>
-        <Image
-          placeholder="icon"
-          style={{ width: "90%", height: "100%", marginRight: 8 }}
-          source={require("@/assets/images/icon.svg")}
-        />
+    <>
+      <View style={styles.header}>
+        <View style={{ height: 60, width: 60 }}>
+          <Image
+            placeholder="icon"
+            style={{ width: "90%", height: "100%", marginRight: 8 }}
+            source={require("@/assets/images/icon.svg")}
+          />
+        </View>
+        <View style={styles.headerButtons}>
+          <Text style={styles.headerText}>{t("header")}</Text>
+          <TouchableHighlight>
+            <View
+              style={{ height: 40, width: 40 }}
+              onTouchStart={() => {
+                setIsOpenSettings(true);
+              }}
+            >
+              <Image
+                placeholder="icon"
+                style={{ width: "100%", height: "100%", marginRight: 8 }}
+                source={require("@/assets/images/settings.svg")}
+              />
+            </View>
+          </TouchableHighlight>
+        </View>
       </View>
-      <Text style={styles.headerText}>KustIoT</Text>
-    </View>
+      <Portal isVisible={isOpenSettings} setIsVisible={setIsOpenSettings}>
+        <Picker
+          label="language"
+          items={[
+            { name: "English", value: "en-US" },
+            { name: "Русский", value: "ru-RU" },
+          ]}
+          onChange={(v) => {
+            AsyncStorage.setItem("language", v);
+          }}
+        />
+      </Portal>
+    </>
   );
 }
 
@@ -149,5 +188,12 @@ const styles = StyleSheet.create({
   },
   addDeviceText: {
     fontSize: defaultFontSize,
+  },
+  headerButtons: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "space-between",
   },
 });

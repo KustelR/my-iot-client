@@ -10,6 +10,7 @@ import CustomTextInput from "@/src/components/CustomTextInput";
 import Picker from "@/src/components/Picker";
 import { useState } from "react";
 import { Portal } from "@/src/components/Portal";
+import { useTranslation } from "react-i18next";
 
 export interface DeviceEditorProps {
   isVisible: boolean;
@@ -34,6 +35,7 @@ function DeviceEditorInternal(props: {
   onSubmit?: (device: DeviceData) => void;
   setIsVisible: (arg: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const { onSubmit, setIsVisible } = props;
   const [deviceName, setDeviceName] = useState("");
   const [deviceType, setDeviceType] = useState<DeviceType | undefined>(
@@ -45,14 +47,14 @@ function DeviceEditorInternal(props: {
       <View style={{ marginBottom: 120 }}>
         <Text style={styles.deviceEditorHeader}>Device Editor</Text>
         <CustomTextInput
-          label="Name"
+          label={t("name")}
           onChangeText={(val) => {
             setDeviceName(val);
           }}
         />
         <View style={{ marginBottom: 12 }}>
           <Picker
-            label="Mode"
+            label={t("mode")}
             items={[{ name: "GSM", value: "gsm" }]}
             onChange={(val) => {
               if (isDeviceType(val)) setDeviceType(val);
@@ -73,7 +75,7 @@ function DeviceEditorInternal(props: {
           handleSubmit(deviceName, deviceType, gsmPhoneNumber, onSubmit);
           setIsVisible(false);
         }}
-        title="Add"
+        title={t("add")}
       />
     </View>
   );
@@ -101,12 +103,13 @@ function handleSubmit(
 function GSMDeviceEditor(props: {
   onChange?: (arg: { phoneNumber: string }) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <View>
       <CustomTextInput
-        label="Phone Number"
-        onChangeText={(t) => {
-          props.onChange ? props.onChange({ phoneNumber: t }) : () => {};
+        label={t("phone-number")}
+        onChangeText={(value) => {
+          props.onChange ? props.onChange({ phoneNumber: value }) : () => {};
         }}
       />
     </View>

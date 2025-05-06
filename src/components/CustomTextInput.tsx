@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   input: {
-    fontSize: defaultFontSize,
+    fontSize: 24,
     borderBottomWidth: 2,
     flexGrow: 1,
     borderBottomColor: primaryColor,

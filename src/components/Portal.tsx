@@ -1,6 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { Modal, View, StyleSheet, BackHandler } from "react-native";
 import InlineButton from "./InlineButton";
+import { useTranslation } from "react-i18next";
 
 export function Portal(props: {
   isVisible: boolean;
@@ -8,6 +9,7 @@ export function Portal(props: {
   children: ReactNode;
 }) {
   const { isVisible, setIsVisible, children } = props;
+  const { t } = useTranslation();
 
   return (
     <>
@@ -18,7 +20,7 @@ export function Portal(props: {
               <View style={styles.items}>{children}</View>
             </View>
             <InlineButton
-              title="go back"
+              title={t("back")}
               onTouchStart={() => {
                 setIsVisible(false);
               }}

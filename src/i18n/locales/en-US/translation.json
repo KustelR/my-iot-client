@@ -1,0 +1,20 @@
+{
+  "language": "English",
+  "header": "Kust IoT",
+  "add-device": "Add device",
+  "status": "Information:",
+  "actions": "Actions:",
+  "no-actions": "Device provided no actions",
+  "no-status": "Device provided no status",
+  "s": "seconds",
+  "turn-on": "Turn on",
+  "turn-off": "Turn off",
+  "perform": "Perform",
+  "name": "Name",
+  "mode": "Mode",
+  "add": "Add",
+  "phone-number": "Phone number",
+  "back": "go back",
+  "off": "Off",
+  "on": "On"
+}

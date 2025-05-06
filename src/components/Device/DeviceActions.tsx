@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Portal } from "@/src/components/Portal";
 import CustomTextInput from "../CustomTextInput";
 import { useDevices } from "@/src/hooks/useDevices";
+import { useTranslation } from "react-i18next";
 
 export default function DeviceActions(props: {
   data: DeviceData;
@@ -15,10 +16,11 @@ export default function DeviceActions(props: {
   ) => void;
 }) {
   const { data, onAction } = props;
+  const { t } = useTranslation();
   return (
     <View>
-      <Text style={styles.deviceDataHeader}>Actions</Text>
-      {data.actions.length === 0 && <Text>Device provided no actions</Text>}
+      <Text style={styles.deviceDataHeader}>{t("actions")}</Text>
+      {data.actions.length === 0 && <Text>{t("no-actions")}</Text>}
       <FlatList
         data={data.actions}
         renderItem={(item) => (
@@ -44,6 +46,7 @@ function DeviceAction(props: {
   ) => void;
 }) {
   const { deviceName, data, callback } = props;
+  const { t } = useTranslation();
 
   const [isPerforming, setIsPerforming] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -73,11 +76,11 @@ function DeviceAction(props: {
         <Text style={styles.deviceListItemText}>{data.name}</Text>
         <Text style={styles.deviceListItemText}>
           {isActive
-            ? `On: ${Math.floor((duration ? duration : 0) / 1000)} s`
-            : "Off"}
+            ? `${t("on")}: ${Math.floor((duration ? duration : 0) / 1000)} ${t("seconds")}`
+            : t("off")}
         </Text>
         <InlineButton
-          title={isActive ? "Turn off" : "Turn on"}
+          title={isActive ? t("turn-on") : t("turn-off")}
           active={isActive}
           onTouchStart={() => {
             setIsPerforming(true);
@@ -104,6 +107,7 @@ function ActionPerformingMenu(props: {
   setIsPerforming: (arg: boolean) => void;
   callback?: (args: { [key: string]: string }) => void;
 }) {
+  const { t } = useTranslation();
   const { deviceName, isPerforming, setIsPerforming, action, callback } = props;
   const [properties, setProperties] = useState<{ [key: string]: string }>({});
 
@@ -128,7 +132,7 @@ function ActionPerformingMenu(props: {
       />
       <InlineButton
         active
-        title="Perform"
+        title={t("perform")}
         onTouchStart={() => {
           callback ? callback(properties) : {};
         }}
