@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
   deviceHeader: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
   },
   deviceHeaderText: {
