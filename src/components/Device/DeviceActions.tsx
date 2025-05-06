@@ -5,9 +5,16 @@ import InlineButton from "@/src/components/InlineButton";
 import { useEffect, useState } from "react";
 import { Portal } from "@/src/components/Portal";
 import CustomTextInput from "../CustomTextInput";
+import { useDevices } from "@/src/hooks/useDevices";
 
-export default function DeviceActions(props: { data: DeviceData }) {
-  const { data } = props;
+export default function DeviceActions(props: {
+  data: DeviceData;
+  onAction?: (
+    actionName: string,
+    properties: { [key: string]: string },
+  ) => void;
+}) {
+  const { data, onAction } = props;
   return (
     <View>
       <Text style={styles.deviceDataHeader}>Actions</Text>
@@ -15,15 +22,28 @@ export default function DeviceActions(props: { data: DeviceData }) {
       <FlatList
         data={data.actions}
         renderItem={(item) => (
-          <DeviceAction deviceName={data.name} data={item.item} />
+          <DeviceAction
+            deviceName={data.name}
+            data={item.item}
+            callback={(name, properties) => {
+              onAction ? onAction(name, properties) : {};
+            }}
+          />
         )}
       />
     </View>
   );
 }
 
-function DeviceAction(props: { deviceName: string; data: DeviceActionData }) {
-  const { deviceName, data } = props;
+function DeviceAction(props: {
+  deviceName: string;
+  data: DeviceActionData;
+  callback?: (
+    actionName: string,
+    properties: { [key: string]: string },
+  ) => void;
+}) {
+  const { deviceName, data, callback } = props;
 
   const [isPerforming, setIsPerforming] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -46,6 +66,7 @@ function DeviceAction(props: { deviceName: string; data: DeviceActionData }) {
     setIsActive(dur > 0);
     setDuration(dur);
   }, [data, now]);
+
   return (
     <>
       <View style={styles.deviceListItem}>
@@ -68,6 +89,9 @@ function DeviceAction(props: { deviceName: string; data: DeviceActionData }) {
         action={data}
         isPerforming={isPerforming}
         setIsPerforming={setIsPerforming}
+        callback={(properties) => {
+          callback ? callback(data.name, properties) : {};
+        }}
       />
     </>
   );
@@ -78,8 +102,10 @@ function ActionPerformingMenu(props: {
   action: DeviceActionData;
   isPerforming: boolean;
   setIsPerforming: (arg: boolean) => void;
+  callback?: (args: { [key: string]: string }) => void;
 }) {
-  const { deviceName, isPerforming, setIsPerforming, action } = props;
+  const { deviceName, isPerforming, setIsPerforming, action, callback } = props;
+  const [properties, setProperties] = useState<{ [key: string]: string }>({});
 
   return (
     <Portal isVisible={isPerforming} setIsVisible={setIsPerforming}>
@@ -89,9 +115,24 @@ function ActionPerformingMenu(props: {
       <FlatList
         style={{ marginBottom: 80 }}
         data={action.properties}
-        renderItem={(item) => <CustomTextInput label={item.item} />}
+        renderItem={(item) => (
+          <CustomTextInput
+            label={item.item}
+            onChangeText={(v) => {
+              const data = { ...properties };
+              data[item.item] = v;
+              setProperties(data);
+            }}
+          />
+        )}
       />
-      <InlineButton active title="Perform" />
+      <InlineButton
+        active
+        title="Perform"
+        onTouchStart={() => {
+          callback ? callback(properties) : {};
+        }}
+      />
     </Portal>
   );
 }

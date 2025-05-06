@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   label: {
     fontSize: defaultFontSize,

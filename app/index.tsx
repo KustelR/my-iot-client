@@ -12,26 +12,6 @@ import {
 import { Image } from "expo-image";
 import { useDevices } from "@/src/hooks/useDevices";
 
-const mockAction: DeviceActionData = {
-  name: "Relay 111",
-  properties: ["duration"],
-};
-const mockAction2: DeviceActionData = {
-  name: "Relay 121",
-  startedAt: Date.now(),
-  duration: 100002,
-  properties: ["duration"],
-};
-
-const mockDevices: DeviceData[] = [
-  { name: "POLIVALKA 3000", status: { Power: "100%" }, actions: [mockAction] },
-  {
-    name: "POLIVALKA 3001",
-    status: { Power: "33%" },
-    actions: [mockAction, mockAction2, mockAction],
-  },
-];
-
 export default function Index() {
   const [devices, setDevices] = useState<DeviceData[]>([]);
 

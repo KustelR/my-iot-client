@@ -4,6 +4,7 @@ export default Device;
 export interface DeviceData {
   name: string;
   status: DeviceStatusData;
+  pulledAt?: number;
   actions: DeviceActionData[];
   deviceType?: DeviceType;
 }

@@ -1,14 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableHighlight,
-  useAnimatedValue,
-  Animated,
-  ViewStyle,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight } from "react-native";
 import { Image } from "expo-image";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RotatingView from "@/src/components/RotatingView";
 import { defaultFontSize } from "@/src/styles";
 
