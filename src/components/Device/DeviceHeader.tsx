@@ -10,6 +10,7 @@ import {
 import { Image } from "expo-image";
 import { PropsWithChildren, useEffect, useState } from "react";
 import RotatingView from "@/src/components/RotatingView";
+import { defaultFontSize } from "@/src/styles";
 
 export interface DeviceHeaderProps {
   name: string;
@@ -108,6 +109,6 @@ const styles = StyleSheet.create({
   },
   deviceHeaderText: {
     fontWeight: "bold",
-    fontSize: 32,
+    fontSize: defaultFontSize * 1.3,
   },
 });

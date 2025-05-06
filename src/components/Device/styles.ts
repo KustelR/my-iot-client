@@ -1,3 +1,4 @@
+import { defaultFontSize } from "@/src/styles";
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
@@ -21,7 +22,7 @@ export default StyleSheet.create({
     justifyContent: "space-between",
   },
   deviceDataHeader: {
-    fontSize: 24,
+    fontSize: defaultFontSize * 1.1,
   },
   deviceListItemText: {
     fontSize: 24,
