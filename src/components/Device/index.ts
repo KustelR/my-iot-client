@@ -19,7 +19,8 @@ export interface DeviceStatusData {
 
 export interface DeviceActionData {
   name: string;
-  status: boolean;
+  startedAt?: number;
+  duration?: number;
   properties: string[];
 }
 
