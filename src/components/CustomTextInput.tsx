@@ -32,17 +32,17 @@ export default function CustomTextInput(props: CustomTextInputProps) {
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-end",
+    flexDirection: "column",
   },
   label: {
     fontSize: defaultFontSize,
     marginRight: 12,
   },
   input: {
-    fontSize: 24,
-    borderBottomWidth: 2,
-    flexGrow: 1,
-    borderBottomColor: primaryColor,
+    textAlignVertical: "top",
+    padding: defaultFontSize / 3,
+    fontSize: defaultFontSize,
+    borderWidth: 2,
+    borderColor: primaryColor,
   },
 });

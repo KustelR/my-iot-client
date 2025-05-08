@@ -79,13 +79,15 @@ function DeviceAction(props: {
             ? `${t("on")}: ${Math.floor((duration ? duration : 0) / 1000)} ${t("seconds")}`
             : t("off")}
         </Text>
-        <InlineButton
-          title={isActive ? t("turn-on") : t("turn-off")}
-          active={isActive}
-          onTouchStart={() => {
-            setIsPerforming(true);
-          }}
-        />
+        <View style={{ flex: 1, maxWidth: "40%" }}>
+          <InlineButton
+            title={isActive ? t("turn-off") : t("turn-on")}
+            active={isActive}
+            onTouchStart={() => {
+              setIsPerforming(true);
+            }}
+          />
+        </View>
       </View>
       <ActionPerformingMenu
         deviceName={deviceName}

@@ -5,7 +5,7 @@ import {
   View,
   Text,
 } from "react-native";
-import { primaryColor } from "@/src/styles";
+import { defaultFontSize, primaryColor } from "@/src/styles";
 
 export default function InlineButton(props: {
   title: string;
@@ -25,8 +25,9 @@ export default function InlineButton(props: {
         onTouchStart={onTouchStart}
       >
         <Text
+          numberOfLines={1}
           style={[
-            { fontSize: 24 },
+            { fontSize: defaultFontSize },
             active || destructive ? styles.activeText : "",
           ]}
         >

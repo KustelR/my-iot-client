@@ -7,7 +7,8 @@ import {
   StyleSheet,
   TouchableHighlight,
 } from "react-native";
-import { defaultFontSize } from "@/src/styles";
+import { defaultFontSize, primaryColor } from "@/src/styles";
+import { useTranslation } from "react-i18next";
 
 interface PickerItem {
   name: string;
@@ -37,14 +38,7 @@ export default function Picker(props: {
           }}
         >
           <Text style={styles.normalText}>{label}: </Text>
-          <View
-            style={{
-              flex: 1,
-              paddingTop: 4,
-              paddingBottom: 4,
-              backgroundColor: "#d7d7d7",
-            }}
-          >
+          <View style={styles.selectItem}>
             <Text style={styles.normalText}>
               {selected ? selected.name : ""}
             </Text>
@@ -67,11 +61,12 @@ function PickerPortal(props: {
   items: PickerItem[];
   setSelected: (arg: PickerItem) => void;
 }) {
+  const { t } = useTranslation();
   const { isVisible, setIsVisible, setSelected, items } = props;
   return (
     <Portal isVisible={isVisible} setIsVisible={setIsVisible}>
-      <Text style={styles.header}>Pick one:</Text>
-      <View style={{ backgroundColor: "#d7d7d7", paddingTop: 4 }}>
+      <Text style={styles.header}>{t("pick-one")}</Text>
+      <View style={styles.selectItem}>
         <FlatList
           data={items}
           renderItem={(item) => (
@@ -95,10 +90,14 @@ function PickerPortal(props: {
 
 const styles = StyleSheet.create({
   select: {
-    paddingTop: 4,
     display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "column",
+  },
+  selectItem: {
+    width: "100%",
+    padding: defaultFontSize / 3,
+    borderColor: primaryColor,
+    borderWidth: 2,
   },
   normalText: {
     fontSize: defaultFontSize,
@@ -110,6 +109,5 @@ const styles = StyleSheet.create({
   },
   pickerItem: {
     backgroundColor: "white",
-    marginBottom: 4,
   },
 });

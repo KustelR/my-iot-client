@@ -45,7 +45,7 @@ function DeviceEditorInternal(props: {
   return (
     <View>
       <View style={{ marginBottom: 120 }}>
-        <Text style={styles.deviceEditorHeader}>Device Editor</Text>
+        <Text style={styles.deviceEditorHeader}>{t("device-editor")}</Text>
         <CustomTextInput
           label={t("name")}
           onChangeText={(val) => {
@@ -121,4 +121,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
   },
+  deviceEditorListItem: {
+  }
 });
