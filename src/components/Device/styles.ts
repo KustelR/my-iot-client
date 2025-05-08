@@ -28,6 +28,7 @@ export default StyleSheet.create({
     fontSize: defaultFontSize * 1.1,
   },
   deviceListItemText: {
+    maxWidth: "35%",
     fontSize: defaultFontSize,
     color: "#555555",
   },

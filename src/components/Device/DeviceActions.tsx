@@ -75,8 +75,10 @@ function DeviceAction(props: {
       <View style={styles.deviceListItem}>
         <Text style={styles.deviceListItemText}>{data.name}</Text>
         <Text style={styles.deviceListItemText}>
-          {isActive
-            ? `${t("on")}: ${Math.floor((duration ? duration : 0) / 1000)} ${t("seconds")}`
+          {isActive && duration
+            ? `${t("on")}: ${Math.floor((duration ? duration : 0) / 1000)
+                .toString()
+                .slice(0, 8)} ${t("seconds")}`
             : t("off")}
         </Text>
         <View style={{ flex: 1, maxWidth: "40%" }}>

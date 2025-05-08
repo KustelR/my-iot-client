@@ -17,5 +17,6 @@
   "back": "go back",
   "off": "Off",
   "on": "On",
-  "device-editor": "Device Editor"
+  "device-editor": "Device Editor",
+  "seconds": "s"
 }
