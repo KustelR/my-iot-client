@@ -100,18 +100,20 @@ function DeviceEditorHeader(props: {
         <Text style={styles.deviceEditorHeader}>
           {data ? data.name : t("new-device")}
         </Text>
-        <TouchableHighlight style={{ height: "100%" }}>
-          <Image
-            onTouchStart={() => {
-              setIsDotMenu(true);
-            }}
-            style={{
-              width: 12,
-              height: 50,
-            }}
-            source={require("@/assets/images/dots.svg")}
-          />
-        </TouchableHighlight>
+        {data && (
+          <TouchableHighlight style={{ height: "100%" }}>
+            <Image
+              onTouchStart={() => {
+                setIsDotMenu(true);
+              }}
+              style={{
+                width: 10,
+                height: 50,
+              }}
+              source={require("@/assets/images/dots.svg")}
+            />
+          </TouchableHighlight>
+        )}
       </View>
       <Portal isVisible={isDotMenu} setIsVisible={setIsDotMenu}>
         <Text style={{ marginBottom: 20, fontSize: defaultFontSize * 1.5 }}>
@@ -127,7 +129,7 @@ function DeviceEditorHeader(props: {
           active
           title="JSON"
           onTouchStart={() => {
-            alert(JSON.stringify(data));
+            alert(JSON.stringify(data, null, 2));
           }}
         />
       </Portal>
