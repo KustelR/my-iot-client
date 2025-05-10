@@ -17,8 +17,6 @@ import { Portal } from "@/src/components/Portal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
-  const [devices, setDevices] = useState<DeviceData[]>([]);
-
   const [deviceIds, setDeviceIds] = useState<string[]>([]);
   const devicesProvider = useDevices();
   useEffect(() => {
