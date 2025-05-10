@@ -165,6 +165,5 @@ function updateActionDuration(
     return a.name !== name;
   });
   newActions.push(newAction);
-
-  deviceProvider.update(data.name, { ...data, actions: newActions });
+  deviceProvider.update(data.id, { ...data, actions: newActions });
 }

@@ -96,7 +96,7 @@ function DeviceAction(props: {
         isPerforming={isPerforming}
         setIsPerforming={setIsPerforming}
         callback={(properties) => {
-          callback ? callback(device.id, properties) : {};
+          callback ? callback(data.name, properties) : {};
         }}
       />
     </>
