@@ -5,7 +5,6 @@ import InlineButton from "@/src/components/InlineButton";
 import { useEffect, useState } from "react";
 import { Portal } from "@/src/components/Portal";
 import CustomTextInput from "../CustomTextInput";
-import { useDevices } from "@/src/hooks/useDevices";
 import { useTranslation } from "react-i18next";
 
 export default function DeviceActions(props: {

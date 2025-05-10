@@ -5,7 +5,6 @@ import {
   setDevices,
   updateDevice,
 } from "../storage/devices";
-import { useEffect, useState } from "react";
 
 type Subscriber = (device: DeviceData) => void;
 type GlobalSubscriber = (deviceStorage: DeviceStorage) => void;
