@@ -53,8 +53,8 @@ export class DevicesHook {
     await setDevices(devices);
   }
   async update(id: string, deviceData: DeviceData) {
-    const data = await updateDevice(id, deviceData);
     if (!this.state[id]) console.error("Unknown device id");
+    const data = await updateDevice(id, deviceData);
     this.state[id] = data;
     this.callSubscribersById(id);
   }
