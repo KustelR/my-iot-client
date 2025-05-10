@@ -46,11 +46,13 @@ function DeviceEditorInternal(props: {
 }) {
   const { t } = useTranslation();
   const { onSubmit, onDelete, data, setIsVisible } = props;
-  const [deviceName, setDeviceName] = useState("");
+  const [deviceName, setDeviceName] = useState(data ? data.name : "");
   const [deviceType, setDeviceType] = useState<DeviceType | undefined>(
     data ? data.deviceType : undefined,
   );
-  const [gsmPhoneNumber, setGsmPhoneNumber] = useState<string>("");
+  const [gsmPhoneNumber, setGsmPhoneNumber] = useState<string>(
+    data?.deviceType == "gsm" ? (data as DeviceDataGSM).phoneNumber : "",
+  );
   return (
     <View>
       <View style={{ marginBottom: 60 }}>
