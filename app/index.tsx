@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { Image } from "expo-image";
-import { useDevices } from "@/src/hooks/useDevices";
+import { DevicesHook, useDevices } from "@/src/hooks/useDevices";
 import { useTranslation } from "react-i18next";
 import Picker from "@/src/components/Picker";
 import { Portal } from "@/src/components/Portal";
@@ -19,13 +19,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Index() {
   const [devices, setDevices] = useState<DeviceData[]>([]);
 
+  const [deviceIds, setDeviceIds] = useState<string[]>([]);
   const devicesProvider = useDevices();
-
   useEffect(() => {
-    if (!devicesProvider) return;
-    devicesProvider.addSubscriber((d) => {
-      setDevices(d);
-    });
+    setDeviceIds(devicesProvider.getIds());
+    devicesProvider.addSubscriberGlobal((ds) =>
+      setDeviceIds(devicesProvider.getIds()),
+    );
   }, [devicesProvider]);
 
   return (
@@ -37,34 +37,29 @@ export default function Index() {
       }}
     >
       <Header />
-      <DeviceList
-        devices={devices}
-        setDevices={(d) => {
-          devicesProvider ? devicesProvider.set(d) : {};
-        }}
-      />
+      <DeviceList deviceIds={deviceIds} />
     </View>
   );
 }
 
-function DeviceList(props: {
-  devices: DeviceData[];
-  setDevices: (d: DeviceData[]) => void;
-}) {
-  const { devices, setDevices } = props;
+function DeviceList(props: { deviceIds: string[] }) {
+  const { deviceIds } = props;
   const [isAdding, setIsAdding] = useState(false);
+
+  const devices = useDevices();
+
   return (
     <>
       <View style={styles.deviceList}>
         <FlatList
-          data={[...props.devices, null]}
+          data={[...props.deviceIds, null]}
           renderItem={(item) => {
             return (
               <View style={{ flex: 1 }}>
-                {item.index < devices.length && (
-                  <Device data={devices[item.index]} />
+                {item.index < deviceIds.length && (
+                  <Device id={item.item as string} />
                 )}
-                {item.index == devices.length && (
+                {item.index == deviceIds.length && (
                   <AddDeviceButton setIsAdding={setIsAdding} />
                 )}
               </View>
@@ -75,8 +70,14 @@ function DeviceList(props: {
       <DeviceEditor
         isVisible={isAdding}
         setIsVisible={setIsAdding}
-        devices={devices}
-        setDevices={setDevices}
+        onSubmit={(d) => {
+          console.log(devices);
+          const data = devices?.get();
+          if (data) {
+            data[d.id] = d;
+            devices?.set(data);
+          }
+        }}
       />
     </>
   );

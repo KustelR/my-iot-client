@@ -2,6 +2,7 @@ import Device from "./Device";
 export default Device;
 
 export interface DeviceData {
+  id: string;
   name: string;
   status: DeviceStatusData;
   pulledAt?: number;
@@ -26,7 +27,7 @@ export interface DeviceActionData {
 }
 
 export type DeviceProps = {
-  data: DeviceData;
+  id: string;
 };
 
 export type DeviceType = "gsm";
@@ -34,5 +35,17 @@ export type DeviceType = "gsm";
 export function isDeviceType(data: string): data is DeviceType {
   const deviceTypes = ["gsm"];
   if (deviceTypes.includes(data)) return true;
+  return false;
+}
+
+export function isDeviceData(device: any): device is DeviceData {
+  if (
+    "id" in device &&
+    "name" in device &&
+    "status" in device &&
+    "actions" in device
+  ) {
+    return true;
+  }
   return false;
 }
