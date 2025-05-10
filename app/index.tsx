@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import Picker from "@/src/components/Picker";
 import { Portal } from "@/src/components/Portal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { nanoid } from "nanoid/non-secure";
 
 export default function Index() {
   const [deviceIds, setDeviceIds] = useState<string[]>([]);
@@ -69,10 +70,11 @@ function DeviceList(props: { deviceIds: string[] }) {
         isVisible={isAdding}
         setIsVisible={setIsAdding}
         onSubmit={(d) => {
-          console.log(devices);
           const data = devices?.get();
           if (data) {
-            data[d.id] = d;
+            const id = nanoid();
+            d.id = id;
+            data[id] = d;
             devices?.set(data);
           }
         }}

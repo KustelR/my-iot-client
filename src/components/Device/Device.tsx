@@ -66,6 +66,7 @@ export default function Device(props: DeviceProps) {
           data={data}
           setIsVisible={setIsEditing}
           onSubmit={(d) => {
+            d.id = id;
             deviceProvider.update(id, d);
           }}
           onDelete={() => {

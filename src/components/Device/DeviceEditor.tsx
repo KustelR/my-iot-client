@@ -172,7 +172,7 @@ function handleSubmit(
   onSubmit?: (device: DeviceData) => void,
 ) {
   const device: DeviceData = {
-    id: nanoid(),
+    id: "",
     name: name,
     deviceType: deviceType,
     actions: [],
