@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableHighlight } from "react-native";
+import { Image } from "expo-image";
 import {
   DeviceData,
   DeviceDataGSM,
@@ -12,60 +13,60 @@ import { useState } from "react";
 import { Portal } from "@/src/components/Portal";
 import { useTranslation } from "react-i18next";
 import { nanoid } from "nanoid/non-secure";
+import { defaultFontSize } from "@/src/styles";
 
 export interface DeviceEditorProps {
   isVisible: boolean;
-  onSubmit: (arg: DeviceData) => void;
+  data?: DeviceData;
+  onSubmit?: (arg: DeviceData) => void;
+  onDelete?: () => void;
   setIsVisible: (arg: boolean) => void;
 }
 
 export default function DeviceEditor(props: DeviceEditorProps) {
-  const { isVisible, setIsVisible, onSubmit } = props;
+  const { isVisible, setIsVisible, onSubmit, onDelete, data } = props;
 
   return (
     <Portal isVisible={isVisible} setIsVisible={setIsVisible}>
-      <DeviceEditorInternal onSubmit={onSubmit} setIsVisible={setIsVisible} />
+      <DeviceEditorInternal
+        onSubmit={onSubmit}
+        onDelete={onDelete}
+        setIsVisible={setIsVisible}
+        data={data}
+      />
     </Portal>
   );
 }
 
 function DeviceEditorInternal(props: {
   onSubmit?: (device: DeviceData) => void;
+  data?: DeviceData;
+  onDelete?: () => void;
   setIsVisible: (arg: boolean) => void;
 }) {
   const { t } = useTranslation();
-  const { onSubmit, setIsVisible } = props;
+  const { onSubmit, onDelete, data, setIsVisible } = props;
   const [deviceName, setDeviceName] = useState("");
   const [deviceType, setDeviceType] = useState<DeviceType | undefined>(
-    undefined,
+    data ? data.deviceType : undefined,
   );
   const [gsmPhoneNumber, setGsmPhoneNumber] = useState<string>("");
   return (
     <View>
-      <View style={{ marginBottom: 120 }}>
-        <Text style={styles.deviceEditorHeader}>{t("device-editor")}</Text>
-        <CustomTextInput
-          label={t("name")}
-          onChangeText={(val) => {
-            setDeviceName(val);
+      <View style={{ marginBottom: 60 }}>
+        <DeviceEditorHeader data={data} onDelete={onDelete} />
+        <MainEditor
+          setDeviceName={setDeviceName}
+          setDeviceType={setDeviceType}
+          data={data}
+        />
+        <GSMDeviceEditor
+          data={data}
+          deviceType={deviceType}
+          onChange={(data) => {
+            setGsmPhoneNumber(data.phoneNumber);
           }}
         />
-        <View style={{ marginBottom: 12 }}>
-          <Picker
-            label={t("mode")}
-            items={[{ name: "GSM", value: "gsm" }]}
-            onChange={(val) => {
-              if (isDeviceType(val)) setDeviceType(val);
-            }}
-          />
-        </View>
-        {deviceType == "gsm" && (
-          <GSMDeviceEditor
-            onChange={(data) => {
-              setGsmPhoneNumber(data.phoneNumber);
-            }}
-          />
-        )}
       </View>
       <InlineButton
         active
@@ -76,6 +77,91 @@ function DeviceEditorInternal(props: {
         title={t("add")}
       />
     </View>
+  );
+}
+
+function DeviceEditorHeader(props: {
+  data?: DeviceData;
+  onDelete?: () => void;
+}) {
+  const { data, onDelete } = props;
+  const [isDotMenu, setIsDotMenu] = useState(false);
+  const { t } = useTranslation();
+  return (
+    <>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text style={styles.deviceEditorHeader}>
+          {data ? data.name : t("new-device")}
+        </Text>
+        <TouchableHighlight style={{ height: "100%" }}>
+          <Image
+            onTouchStart={() => {
+              setIsDotMenu(true);
+            }}
+            style={{
+              width: 12,
+              height: 50,
+            }}
+            source={require("@/assets/images/dots.svg")}
+          />
+        </TouchableHighlight>
+      </View>
+      <Portal isVisible={isDotMenu} setIsVisible={setIsDotMenu}>
+        <Text style={{ marginBottom: 20, fontSize: defaultFontSize * 1.5 }}>
+          {t("actions")}
+        </Text>
+        <InlineButton
+          style={{ marginBottom: 10 }}
+          destructive
+          title={t("delete")}
+          onTouchStart={onDelete ? onDelete : () => {}}
+        />
+        <InlineButton
+          active
+          title="JSON"
+          onTouchStart={() => {
+            alert(JSON.stringify(data));
+          }}
+        />
+      </Portal>
+    </>
+  );
+}
+
+function MainEditor(props: {
+  setDeviceName: (arg: string) => void;
+  setDeviceType: (arg: DeviceType) => void;
+  data?: DeviceData;
+}) {
+  const { setDeviceName, setDeviceType, data } = props;
+  const { t } = useTranslation();
+  return (
+    <>
+      <CustomTextInput
+        defaultValue={data?.name}
+        label={t("name")}
+        onChangeText={(val) => {
+          setDeviceName(val);
+        }}
+      />
+      <View style={{ marginBottom: 12 }}>
+        <Picker
+          value={data?.deviceType}
+          label={t("mode")}
+          items={[{ name: "GSM", value: "gsm" }]}
+          onChange={(val) => {
+            if (isDeviceType(val)) setDeviceType(val);
+          }}
+        />
+      </View>
+    </>
   );
 }
 
@@ -100,15 +186,20 @@ function handleSubmit(
 }
 
 function GSMDeviceEditor(props: {
+  deviceType: DeviceType | undefined;
   onChange?: (arg: { phoneNumber: string }) => void;
+  data?: DeviceData;
 }) {
+  const { deviceType, onChange, data } = props;
   const { t } = useTranslation();
+  if (deviceType !== "gsm") return;
   return (
     <View>
       <CustomTextInput
+        defaultValue={data ? (data as DeviceDataGSM).phoneNumber : undefined}
         label={t("phone-number")}
         onChangeText={(value) => {
-          props.onChange ? props.onChange({ phoneNumber: value }) : () => {};
+          onChange ? onChange({ phoneNumber: value }) : () => {};
         }}
       />
     </View>

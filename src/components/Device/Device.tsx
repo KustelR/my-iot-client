@@ -6,6 +6,7 @@ import DeviceActions from "./DeviceActions";
 import DeviceHeader, { SyncStatus } from "./DeviceHeader";
 import { useEffect, useState } from "react";
 import { DevicesHook, useDevices } from "@/src/hooks/useDevices";
+import DeviceEditor from "./DeviceEditor";
 
 const mockAction: DeviceActionData = {
   name: "Relay 111",
@@ -17,10 +18,12 @@ const mockAction2: DeviceActionData = {
   duration: 100002,
   properties: ["duration"],
 };
+
 export default function Device(props: DeviceProps) {
   const { id } = props;
 
   const [data, setData] = useState<DeviceData>();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const deviceProvider = useDevices();
   useEffect(() => {
@@ -38,17 +41,13 @@ export default function Device(props: DeviceProps) {
         <View style={styles.device}>
           <DeviceHeader
             name={data.name}
-            syncStatus={
-              data.pulledAt ? getSyncStatus(data.pulledAt) : undefined
-            }
+            syncStatus={getSyncStatus(data.pulledAt)}
             isSyncAnimated={isSyncLocked}
             onSyncTouch={() => {
-              deviceProvider
-                ? onTouch(data, isSyncLocked, setIsSyncLocked, deviceProvider)
-                : {};
+              onTouch(data, isSyncLocked, setIsSyncLocked, deviceProvider);
             }}
             onEditTouch={() => {
-              deviceProvider.deleteDevice(id);
+              setIsEditing(true);
             }}
           />
           <DeviceStatus data={data.status} />
@@ -61,6 +60,19 @@ export default function Device(props: DeviceProps) {
         </View>
       )}
       {!data && <DeviceFallback id={id} />}
+      {isEditing && (
+        <DeviceEditor
+          isVisible={isEditing}
+          data={data}
+          setIsVisible={setIsEditing}
+          onSubmit={(d) => {
+            deviceProvider.update(id, d);
+          }}
+          onDelete={() => {
+            deviceProvider.deleteDevice(id);
+          }}
+        />
+      )}
     </>
   );
 }
@@ -73,7 +85,8 @@ function DeviceFallback(props: { id: string }) {
   );
 }
 
-function getSyncStatus(pulledAt: number): SyncStatus | undefined {
+function getSyncStatus(pulledAt: number | undefined): SyncStatus | undefined {
+  if (!pulledAt) return undefined;
   const age = Date.now() - pulledAt;
 
   if (pulledAt === -1) return "fail";
@@ -84,7 +97,7 @@ function onTouch(
   data: DeviceData,
   isSyncLocked: boolean,
   setIsSyncLocked: (arg: boolean) => void,
-  deviceProvider: DevicesHook,
+  deviceProvider?: DevicesHook,
 ) {
   setIsSyncLocked(true);
   if (isSyncLocked) {
