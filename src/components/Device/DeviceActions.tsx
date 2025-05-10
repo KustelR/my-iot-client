@@ -25,7 +25,7 @@ export default function DeviceActions(props: {
         data={data.actions}
         renderItem={(item) => (
           <DeviceAction
-            deviceName={data.name}
+            device={data}
             data={item.item}
             callback={(name, properties) => {
               onAction ? onAction(name, properties) : {};
@@ -38,14 +38,14 @@ export default function DeviceActions(props: {
 }
 
 function DeviceAction(props: {
-  deviceName: string;
+  device: DeviceData;
   data: DeviceActionData;
   callback?: (
     actionName: string,
     properties: { [key: string]: string },
   ) => void;
 }) {
-  const { deviceName, data, callback } = props;
+  const { device, data, callback } = props;
   const { t } = useTranslation();
 
   const [isPerforming, setIsPerforming] = useState(false);
@@ -92,12 +92,12 @@ function DeviceAction(props: {
         </View>
       </View>
       <ActionPerformingMenu
-        deviceName={deviceName}
+        deviceName={device.name}
         action={data}
         isPerforming={isPerforming}
         setIsPerforming={setIsPerforming}
         callback={(properties) => {
-          callback ? callback(data.name, properties) : {};
+          callback ? callback(device.id, properties) : {};
         }}
       />
     </>
