@@ -17,7 +17,8 @@
   "back": "go back",
   "off": "Off",
   "on": "On",
-  "device-editor": "Device Editor",
+  "new-device": "New device",
   "seconds": "s",
-  "pick-one": "Pick one"
+  "pick-one": "Pick one",
+  "delete": "Delete"
 }
