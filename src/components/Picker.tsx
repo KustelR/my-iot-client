@@ -17,12 +17,15 @@ interface PickerItem {
 
 export default function Picker(props: {
   label: string;
+  value?: string;
   items: PickerItem[];
   onChange?: (arg: string) => void;
 }) {
-  const { label, items, onChange } = props;
+  const { label, items, onChange, value } = props;
   const [isVisible, setIsVisible] = useState(false);
-  const [selected, setSelected] = useState<PickerItem | null>(null);
+  const [selected, setSelected] = useState<PickerItem | undefined>(
+    value ? items.find((item) => item.value == value) : undefined,
+  );
 
   useEffect(() => {
     if (!onChange || !selected) return;

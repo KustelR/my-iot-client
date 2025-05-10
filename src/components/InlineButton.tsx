@@ -4,16 +4,18 @@ import {
   TouchableHighlight,
   View,
   Text,
+  ViewStyle,
 } from "react-native";
 import { defaultFontSize, primaryColor } from "@/src/styles";
 
 export default function InlineButton(props: {
   title: string;
+  style?: ViewStyle;
   active?: boolean;
   destructive?: boolean;
   onTouchStart?: () => void;
 }) {
-  const { title, active, destructive, onTouchStart } = props;
+  const { title, active, destructive, onTouchStart, style } = props;
   return (
     <TouchableHighlight>
       <View
@@ -21,6 +23,7 @@ export default function InlineButton(props: {
           styles.button,
           active ? styles.activeButton : "",
           destructive ? styles.destructiveButton : "",
+          style,
         ]}
         onTouchStart={onTouchStart}
       >
