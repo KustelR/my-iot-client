@@ -11,22 +11,20 @@ import Picker from "@/src/components/Picker";
 import { useState } from "react";
 import { Portal } from "@/src/components/Portal";
 import { useTranslation } from "react-i18next";
+import { nanoid } from "nanoid/non-secure";
 
 export interface DeviceEditorProps {
   isVisible: boolean;
+  onSubmit: (arg: DeviceData) => void;
   setIsVisible: (arg: boolean) => void;
-  devices: DeviceData[];
-  setDevices: (arg: DeviceData[]) => void;
 }
 
 export default function DeviceEditor(props: DeviceEditorProps) {
-  const { isVisible, setIsVisible, devices, setDevices } = props;
+  const { isVisible, setIsVisible, onSubmit } = props;
+
   return (
     <Portal isVisible={isVisible} setIsVisible={setIsVisible}>
-      <DeviceEditorInternal
-        onSubmit={(d) => setDevices([...devices, d])}
-        setIsVisible={setIsVisible}
-      />
+      <DeviceEditorInternal onSubmit={onSubmit} setIsVisible={setIsVisible} />
     </Portal>
   );
 }
@@ -88,6 +86,7 @@ function handleSubmit(
   onSubmit?: (device: DeviceData) => void,
 ) {
   const device: DeviceData = {
+    id: nanoid(),
     name: name,
     deviceType: deviceType,
     actions: [],
@@ -121,6 +120,5 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: "bold",
   },
-  deviceEditorListItem: {
-  }
+  deviceEditorListItem: {},
 });

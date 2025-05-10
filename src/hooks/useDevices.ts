@@ -1,59 +1,97 @@
 import { DeviceData } from "@/src/components/Device";
-import { getDevices, setDevices, updateDevice } from "../storage/deviceSlice";
+import {
+  DeviceStorage,
+  getDevices,
+  setDevices,
+  updateDevice,
+} from "../storage/devices";
 import { useEffect, useState } from "react";
 
-type Subscriber = (devices: DeviceData[]) => void;
+type Subscriber = (device: DeviceData) => void;
+type GlobalSubscriber = (deviceStorage: DeviceStorage) => void;
 
 export class DevicesHook {
   constructor() {
     const f = async () => {
-      this.subscribers = [];
-      await this.read();
+      this.subscribers = {};
+      this.globalSunbscribers = [];
+      await this.pull();
     };
     f();
     return this;
   }
-  state: DeviceData[] = [];
-  subscribers: Subscriber[] = [];
+  state: DeviceStorage = {};
+  subscribers: { [key: string]: Subscriber[] } = {};
+  globalSunbscribers: GlobalSubscriber[] = [];
 
   get() {
-    return this.state;
+    return { ...this.state };
   }
-  async read() {
+  getIds(): string[] {
+    return Object.entries(this.state).map((device) => device[0]);
+  }
+
+  getDevice(id: string) {
+    return this.state[id];
+  }
+  async deleteDevice(id: string) {
+    delete this.state[id];
+    delete this.subscribers[id];
+    this.callSubscribersGlobal();
+    await setDevices(this.state);
+  }
+
+  async pull() {
     const data = await getDevices();
     this.state = data;
     this.callSubscribers();
+    this.callSubscribersGlobal();
   }
-  async set(devices: DeviceData[]) {
+  async set(devices: DeviceStorage) {
     this.state = devices;
     this.callSubscribers();
+    this.callSubscribersGlobal();
     await setDevices(devices);
   }
-  async update(name: string, deviceData: DeviceData) {
-    const data = await updateDevice(name, deviceData);
-    this.state = data;
-    this.callSubscribers();
+  async update(id: string, deviceData: DeviceData) {
+    const data = await updateDevice(id, deviceData);
+    if (!this.state[id]) console.error("Unknown device id");
+    this.state[id] = data;
+    this.callSubscribersById(id);
   }
-  addSubscriber(s: Subscriber) {
-    this.subscribers.push(s);
+  addSubscriberById(id: string, s: Subscriber) {
+    if (this.subscribers[id]) {
+      this.subscribers[id].push(s);
+    } else {
+      this.subscribers[id] = [s];
+    }
+  }
+  addSubscriberGlobal(s: GlobalSubscriber) {
+    if (this.subscribers) {
+      this.globalSunbscribers.push(s);
+    }
+  }
+  callSubscribersById(id: string) {
+    this.subscribers[id].forEach((s) => {
+      s(this.state[id]);
+    });
+  }
+  callSubscribersGlobal() {
+    this.globalSunbscribers.forEach((s) => {
+      s(this.state);
+    });
   }
   callSubscribers() {
-    this.subscribers.forEach((s) => {
-      s(this.state);
+    Object.entries(this.subscribers).forEach((entry) => {
+      entry[1].forEach((subscriber) => {
+        subscriber(this.state[entry[0]]);
+      });
     });
   }
 }
 
-let deviceHookGlobal: DevicesHook | undefined;
+let deviceHookGlobal: DevicesHook = new DevicesHook();
 
-export function useDevices() {
-  const [d, setD] = useState<DevicesHook | undefined>();
-  useEffect(() => {
-    if (!deviceHookGlobal) {
-      deviceHookGlobal = new DevicesHook();
-    }
-    setD(deviceHookGlobal);
-  }, []);
-
-  return d;
+export function useDevices(): DevicesHook {
+  return deviceHookGlobal;
 }

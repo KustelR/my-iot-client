@@ -1,10 +1,10 @@
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { DeviceActionData, DeviceData, DeviceDataGSM, DeviceProps } from ".";
 import styles from "./styles";
 import DeviceStatus from "./DeviceStatus";
 import DeviceActions from "./DeviceActions";
 import DeviceHeader, { SyncStatus } from "./DeviceHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DevicesHook, useDevices } from "@/src/hooks/useDevices";
 
 const mockAction: DeviceActionData = {
@@ -18,31 +18,57 @@ const mockAction2: DeviceActionData = {
   properties: ["duration"],
 };
 export default function Device(props: DeviceProps) {
-  const { data } = props;
+  const { id } = props;
+
+  const [data, setData] = useState<DeviceData>();
 
   const deviceProvider = useDevices();
+  useEffect(() => {
+    setData(deviceProvider.getDevice(id));
+    deviceProvider.addSubscriberById(id, (d) => {
+      setData(d);
+    });
+  }, []);
 
   const [isSyncLocked, setIsSyncLocked] = useState<boolean>(false);
 
   return (
-    <View style={styles.device}>
-      <DeviceHeader
-        name={data.name}
-        syncStatus={data.pulledAt ? getSyncStatus(data.pulledAt) : undefined}
-        isSyncAnimated={isSyncLocked}
-        onSyncTouch={() => {
-          deviceProvider
-            ? onTouch(data, isSyncLocked, setIsSyncLocked, deviceProvider)
-            : {};
-        }}
-      />
-      <DeviceStatus data={data.status} />
-      <DeviceActions
-        data={data}
-        onAction={(name, properties) => {
-          handleDeviceAction(data, name, properties, deviceProvider);
-        }}
-      />
+    <>
+      {data && (
+        <View style={styles.device}>
+          <DeviceHeader
+            name={data.name}
+            syncStatus={
+              data.pulledAt ? getSyncStatus(data.pulledAt) : undefined
+            }
+            isSyncAnimated={isSyncLocked}
+            onSyncTouch={() => {
+              deviceProvider
+                ? onTouch(data, isSyncLocked, setIsSyncLocked, deviceProvider)
+                : {};
+            }}
+            onEditTouch={() => {
+              deviceProvider.deleteDevice(id);
+            }}
+          />
+          <DeviceStatus data={data.status} />
+          <DeviceActions
+            data={data}
+            onAction={(name, properties) => {
+              handleDeviceAction(data, name, properties, deviceProvider);
+            }}
+          />
+        </View>
+      )}
+      {!data && <DeviceFallback id={id} />}
+    </>
+  );
+}
+
+function DeviceFallback(props: { id: string }) {
+  return (
+    <View style={[styles.device, { height: 100 }]}>
+      <Text>{props.id}</Text>
     </View>
   );
 }
@@ -66,7 +92,7 @@ function onTouch(
   }
   if (Math.random() > 0.5) {
     setTimeout(() => {
-      deviceProvider?.update(data.name, {
+      deviceProvider?.update(data.id, {
         ...data,
         pulledAt: -1,
         actions: [],
@@ -75,7 +101,7 @@ function onTouch(
     }, 3000);
   } else {
     setTimeout(() => {
-      deviceProvider?.update(data.name, {
+      deviceProvider?.update(data.id, {
         ...data,
         pulledAt: Date.now(),
         actions: [mockAction, mockAction2],
